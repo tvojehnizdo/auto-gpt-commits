@@ -1,0 +1,31 @@
+
+name: GPT Multi-Repo Commit
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Název repozitáře (např. tvojehnizdo.github.io)'
+        required: true
+      file_path:
+        description: 'Cesta k souboru (např. index.html)'
+        required: true
+      content:
+        description: 'Nový obsah souboru'
+        required: true
+
+jobs:
+  commit-to-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Klon cílového repozitáře
+      run: |
+        git clone https://x-access-token:${{ secrets.GH_PAT }}@github.com/tvojehnizdo/${{ github.event.inputs.repo }} target-repo
+        cd target-repo
+        echo "${{ github.event.inputs.content }}" > "${{ github.event.inputs.file_path }}"
+        git config user.name "GPT Bot"
+        git config user.email "bot@tvojehnizdo.cz"
+        git add "${{ github.event.inputs.file_path }}"
+        git commit -m "Auto GPT commit to ${{ github.event.inputs.file_path }}"
+        git push
