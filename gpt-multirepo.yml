@@ -23,6 +23,7 @@ jobs:
       run: |
         git clone https://x-access-token:${{ secrets.GH_PAT }}@github.com/tvojehnizdo/${{ github.event.inputs.repo }} target-repo
         cd target-repo
+        mkdir -p "$(dirname "${{ github.event.inputs.file_path }}")"
         echo "${{ github.event.inputs.content }}" > "${{ github.event.inputs.file_path }}"
         git config user.name "GPT Bot"
         git config user.email "bot@tvojehnizdo.cz"
